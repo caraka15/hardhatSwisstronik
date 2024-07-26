@@ -1,9 +1,10 @@
 node_modules
 .env
-
+/storage/contract.txt
 # Hardhat files
 /cache
 /artifacts
+
 
 # TypeChain files
 /typechain

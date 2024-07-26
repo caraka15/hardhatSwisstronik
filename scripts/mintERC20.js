@@ -1,5 +1,7 @@
 // Import necessary modules from Hardhat and SwisstronikJS
 const hre = require("hardhat");
+const fs = require("fs");
+const path = require("path");
 const { encryptDataField, decryptNodeResponse } = require("@swisstronik/utils");
 
 // Function to send a shielded transaction using the provided signer, destination, data, and value
@@ -20,29 +22,40 @@ const sendShieldedTransaction = async (signer, destination, data, value) => {
 };
 
 async function main() {
-  // Address of the deployed contract
-  const contractAddress = "0x4dBECA4649E39b9679d8c6F3253a3dB6eA773b4f";
+  // Path to the contract address file
+  const filePath = path.join(__dirname, "../storage/contract.txt");
+
+  // Read the contract address from the file
+  const contractData = fs.readFileSync(filePath, "utf8");
+  const contractAddress = contractData
+    .split("\n")
+    .find((line) => line.startsWith("contractERC20="))
+    .split("=")[1];
+
+  if (!contractAddress) {
+    throw new Error("ERC-20 contract address not found in contract.txt");
+  }
 
   // Get the signer (your account)
   const [signer] = await hre.ethers.getSigners();
 
   // Create a contract instance
-  const contractFactory = await hre.ethers.getContractFactory("CrxaNodeNFT");
+  const contractFactory = await hre.ethers.getContractFactory("tokenERC20");
   const contract = contractFactory.attach(contractAddress);
 
-  // Send a shielded transaction to mint an NFT in the contract
-  const functionName = "mint";
-  const mintTx = await sendShieldedTransaction(
+  // Send a shielded transaction to mint 100 tokens in the contract
+  const functionName = "mint100tokens";
+  const mint100TokensTx = await sendShieldedTransaction(
     signer,
     contractAddress,
     contract.interface.encodeFunctionData(functionName),
     0
   );
 
-  await mintTx.wait();
+  await mint100TokensTx.wait();
 
   // It should return a TransactionReceipt object
-  console.log("Transaction Receipt: ", mintTx);
+  console.log("Transaction Receipt: ", mint100TokensTx);
 }
 
 // Using async/await pattern to handle errors properly

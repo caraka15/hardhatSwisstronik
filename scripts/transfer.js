@@ -1,6 +1,9 @@
 // Import necessary modules from Hardhat and SwisstronikJS
 const hre = require("hardhat");
 const { encryptDataField, decryptNodeResponse } = require("@swisstronik/utils");
+const readline = require("readline");
+const fs = require("fs");
+const path = require("path");
 
 // Function to send a shielded transaction using the provided signer, destination, data, and value
 const sendShieldedTransaction = async (signer, destination, data, value) => {
@@ -19,32 +22,65 @@ const sendShieldedTransaction = async (signer, destination, data, value) => {
   });
 };
 
+// Function to prompt user input
+const promptUserInput = (query) => {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  return new Promise((resolve) =>
+    rl.question(query, (answer) => {
+      rl.close();
+      resolve(answer);
+    })
+  );
+};
+
 async function main() {
-  // Address of the deployed contract
-  const replace_contractAddress = "0xe48140250638cbc8e9E718Ae1Ff2D4579eD6757B";
+  // Prompt for recipient address and amount
+  const recipientAddress = await promptUserInput("Masukkan alamat penerima: ");
+  const amount = await promptUserInput(
+    "Masukkan jumlah (tanpa desimal, misalnya 1 untuk 1 token): "
+  );
+
+  // Convert amount to Wei (assuming 18 decimal places)
+  const amountInWei = (BigInt(amount) * BigInt(10 ** 18)).toString();
+
+  // Path to the contract address file
+  const filePath = path.join(__dirname, "../storage/contract.txt");
+
+  // Read the contract address from the file
+  const contractData = fs.readFileSync(filePath, "utf8");
+  const contractAddress = contractData
+    .split("\n")
+    .find((line) => line.startsWith("contractERC20="))
+    .split("=")[1];
+
+  if (!contractAddress) {
+    throw new Error("ERC-20 contract address not found in contract.txt");
+  }
 
   // Get the signer (your account)
   const [signer] = await hre.ethers.getSigners();
 
   // Create a contract instance
-  const replace_contractFactory = await hre.ethers.getContractFactory(
-    "CrxaNode"
-  );
-  const contract = replace_contractFactory.attach(replace_contractAddress);
-  
-  // Send a shielded transaction to execute a transaction in the contract
+  const contractFactory = await hre.ethers.getContractFactory("tokenERC20");
+  const contract = contractFactory.attach(contractAddress);
+
+  // Encode the function call data
   const replace_functionName = "transfer";
-  const replace_functionArgs = [
-    "0x16af037878a6cAce2Ea29d39A3757aC2F6F7aac1",
-    "1000000000000000000",
-  ];
+  const replace_functionArgs = [recipientAddress, amountInWei];
+  const encodedData = contract.interface.encodeFunctionData(
+    replace_functionName,
+    replace_functionArgs
+  );
+
+  // Send a shielded transaction to execute a transaction in the contract
   const transaction = await sendShieldedTransaction(
     signer,
-    replace_contractAddress,
-    contract.interface.encodeFunctionData(
-      replace_functionName,
-      replace_functionArgs
-    ),
+    contractAddress,
+    encodedData,
     0
   );
 

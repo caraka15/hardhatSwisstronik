@@ -3,8 +3,8 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract CrxaNode is ERC20 {
-    constructor()ERC20("CrxaNode","CRXA"){} 
+contract tokenERC20 is ERC20 {
+    constructor()ERC20("KentungToken","Kate"){} 
 
     function mint100tokens() public {
         _mint(msg.sender,100*10**18);

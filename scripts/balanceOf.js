@@ -1,6 +1,9 @@
 // Import necessary modules from Hardhat and SwisstronikJS
 const hre = require("hardhat");
 const { encryptDataField, decryptNodeResponse } = require("@swisstronik/utils");
+const readline = require("readline");
+const fs = require("fs");
+const path = require("path");
 
 // Function to send a shielded query using the provided provider, destination, and data
 const sendShieldedQuery = async (provider, destination, data) => {
@@ -24,24 +27,36 @@ const sendShieldedQuery = async (provider, destination, data) => {
 };
 
 async function main() {
+  // Path to the contract address file
+  const filePath = path.join(__dirname, "../storage/contract.txt");
+
+  // Read the contract address from the file
+  const contractData = fs.readFileSync(filePath, "utf8");
+  const contractAddress = contractData
+    .split("\n")
+    .find((line) => line.startsWith("contractERC721="))
+    .split("=")[1];
+
+  if (!contractAddress) {
+    throw new Error("ERC-20 contract address not found in contract.txt");
+  }
   // Address of the deployed contract
-  const replace_contractAddress = "0xe48140250638cbc8e9E718Ae1Ff2D4579eD6757B";
 
   // Get the signer (your account)
   const [signer] = await hre.ethers.getSigners();
 
   // Create a contract instance
   const replace_contractFactory = await hre.ethers.getContractFactory(
-    "CrxaNode"
+    "tokenERC20"
   );
-  const contract = replace_contractFactory.attach(replace_contractAddress);
+  const contract = replace_contractFactory.attach(contractAddress);
 
   // Send a shielded query to retrieve balance data from the contract
   const replace_functionName = "balanceOf";
-  const replace_functionArgs = ["0x16af037878a6cAce2Ea29d39A3757aC2F6F7aac1"];
+  const replace_functionArgs = ["0xe757ef385b2a4e1e0f259d442d9978f38f5fab5d"];
   const responseMessage = await sendShieldedQuery(
     signer.provider,
-    replace_contractAddress,
+    contract,
     contract.interface.encodeFunctionData(
       replace_functionName,
       replace_functionArgs

@@ -1,6 +1,9 @@
 // Import necessary modules from Hardhat and SwisstronikJS
 const hre = require("hardhat");
 const { encryptDataField, decryptNodeResponse } = require("@swisstronik/utils");
+const readline = require("readline");
+const fs = require("fs");
+const path = require("path");
 
 // Function to send a shielded transaction using the provided signer, destination, data, and value
 const sendShieldedTransaction = async (signer, destination, data, value) => {
@@ -20,29 +23,39 @@ const sendShieldedTransaction = async (signer, destination, data, value) => {
 };
 
 async function main() {
-  // Address of the deployed contract
-  const contractAddress = "0xe48140250638cbc8e9E718Ae1Ff2D4579eD6757B";
+  // Path to the contract address file
+  const filePath = path.join(__dirname, "../storage/contract.txt");
 
+  // Read the contract address from the file
+  const contractData = fs.readFileSync(filePath, "utf8");
+  const contractAddress = contractData
+    .split("\n")
+    .find((line) => line.startsWith("contractERC721="))
+    .split("=")[1];
+
+  if (!contractAddress) {
+    throw new Error("ERC-721 contract address not found in contract.txt");
+  }
   // Get the signer (your account)
   const [signer] = await hre.ethers.getSigners();
 
   // Create a contract instance
-  const contractFactory = await hre.ethers.getContractFactory("CrxaNode");
+  const contractFactory = await hre.ethers.getContractFactory("tokenERC721");
   const contract = contractFactory.attach(contractAddress);
 
-  // Send a shielded transaction to mint 100 tokens in the contract
-  const functionName = "mint100tokens";
-  const mint100TokensTx = await sendShieldedTransaction(
+  // Send a shielded transaction to mint an NFT in the contract
+  const functionName = "mint";
+  const mintTx = await sendShieldedTransaction(
     signer,
     contractAddress,
     contract.interface.encodeFunctionData(functionName),
     0
   );
 
-  await mint100TokensTx.wait();
+  await mintTx.wait();
 
   // It should return a TransactionReceipt object
-  console.log("Transaction Receipt: ", mint100TokensTx);
+  console.log("Transaction Receipt: ", mintTx);
 }
 
 // Using async/await pattern to handle errors properly
