@@ -1,14 +1,14 @@
-# Hardhat Project Guide
+# Swisstronik Testnet 2.0
 
-## Getting Started
+## Guide Task
 
 ### Prerequisites
 
 1. **Clone the Repository**
 
    ```sh
-   git clone <repository-url>
-   cd <repository-directory>
+   git clone https://github.com/caraka15/hardhatSwisstronik.git
+   cd hardhatSwisstronik
    ```
 
 2. **Install Dependencies**
@@ -19,39 +19,22 @@
 
 3. **Create a `.env` File**
    ```sh
-   touch .env
+   nano .env
    ```
    Add your private key to the `.env` file:
    ```
    PRIVATE_KEY=your_private_key_here
    ```
+   you can use ctrl+x to save
 
-### Hardhat Configuration
 
-Ensure your `hardhat.config.js` is properly set up with the network configuration:
-```javascript
-require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config();
-
-    const { PRIVATE_KEY } = process.env;
-
-    module.exports = {
-      solidity: "0.8.20",
-      networks: {
-        swisstronik: {
-          url: "https://json-rpc.testnet.swisstronik.com/",
-          accounts: [PRIVATE_KEY], // Loaded from the .env file
-        },
-      },
-    };
-    ```
 
 ## Deploy a Simple Contract Using Hardhat
 
 ### 1. Deploy `Deploy.sol`
 
-- Create `Deploy.sol` in the `contracts` directory.
-- Create `deploy.js` in the `scripts` directory.
+- before run you can edit your token name
+
 - Run the deployment script:
   ```sh
   npx hardhat run scripts/deploy.js --network swisstronik
@@ -59,7 +42,6 @@ require("dotenv").config();
 
 ### 2. Set Message
 
-- Create `setMessage.js` in the `scripts` directory.
 - Run the script to set the message:
   ```sh
   npx hardhat run scripts/setMessage.js --network swisstronik
@@ -67,7 +49,6 @@ require("dotenv").config();
 
 ### 3. Get Message
 
-- Create `getMessage.js` in the `scripts` directory.
 - Run the script to get the message:
   ```sh
   npx hardhat run scripts/getMessage.js --network swisstronik
@@ -77,8 +58,6 @@ require("dotenv").config();
 
 ### 1. Deploy `TokenERC20.sol`
 
-- Create `TokenERC20.sol` in the `contracts` directory.
-- Create `deployERC20.js` in the `scripts` directory.
 - Run the deployment script:
   ```sh
   npx hardhat run scripts/deployERC20.js --network swisstronik
@@ -94,7 +73,6 @@ require("dotenv").config();
 
 ### 3. Transfer Tokens
 
-- Create `transfer.js` in the `scripts` directory.
 - Run the script to transfer tokens:
   ```sh
   npx hardhat run scripts/transfer.js --network swisstronik
@@ -102,7 +80,6 @@ require("dotenv").config();
 
 ### 4. Check Balance (Optional)
 
-- Create `balanceOf.js` in the `scripts` directory.
 - Run the script to check balance:
   ```sh
   npx hardhat run scripts/balanceOf.js --network swisstronik
@@ -112,8 +89,8 @@ require("dotenv").config();
 
 ### 1. Deploy `TokenERC721.sol`
 
-- Create `TokenERC721.sol` in the `contracts` directory.
-- Create `deployERC721.js` in the `scripts` directory.
+- before run you can edit your token name
+  
 - Run the deployment script:
   ```sh
   npx hardhat run scripts/deployERC721.js --network swisstronik
@@ -121,7 +98,6 @@ require("dotenv").config();
 
 ### 2. Mint ERC-721 Tokens
 
-- Create `mintERC721.js` in the `scripts` directory.
 - Run the script to mint an NFT:
   ```sh
   npx hardhat run scripts/mintERC721.js --network swisstronik
@@ -129,8 +105,8 @@ require("dotenv").config();
 
 ### 3. Check Balance (Optional)
 
-- Create `balanceOf.js` in the `scripts` directory.
 - Run the script to check balance:
   ```sh
   npx hardhat run scripts/balanceOf.js --network swisstronik
   ```
+guide and task not finished yet, wait for next update
