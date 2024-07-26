@@ -1,7 +1,7 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
-const { PRIVATE_KEY2 } = process.env;
+const { PRIVATE_KEY } = process.env;
 
 module.exports = {
   defaultNetwork: "swisstronik",
@@ -9,7 +9,7 @@ module.exports = {
   networks: {
     swisstronik: {
       url: "https://json-rpc.testnet.swisstronik.com/",
-      accounts: [`0x${PRIVATE_KEY2}`],
+      accounts: [`0x${PRIVATE_KEY}`],
     },
   },
 };
