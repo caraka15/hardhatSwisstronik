@@ -27,8 +27,6 @@
    ```
    you can use ctrl+x to save
 
-
-
 ## Deploy a Simple Contract Using Hardhat
 
 ### 1. Deploy `Deploy.sol`
@@ -90,7 +88,6 @@
 ### 1. Deploy `TokenERC721.sol`
 
 - before run you can edit your token name
-  
 - Run the deployment script:
   ```sh
   npx hardhat run scripts/deployERC721.js --network swisstronik
@@ -106,7 +103,34 @@
 ### 3. Check Balance (Optional)
 
 - Run the script to check balance:
+
   ```sh
   npx hardhat run scripts/balanceOf.js --network swisstronik
   ```
+
+  ## Mint an PERC-20 Token
+
+### 1. Deploy `TokenPERC20.sol`
+
+- before run you can edit your token name
+- Run the deployment script:
+  ```sh
+  npx hardhat run scripts/deployPERC20.js --network swisstronik
+  ```
+
+### 2. Mint ERC-721 Tokens
+
+- Run the script to mint an NFT:
+
+  ```sh
+  npx hardhat run scripts/mintPERC20.js --network swisstronik
+  ```
+
+  ### 3. Transfer Tokens
+
+- Run the script to transfer tokens:
+  ```sh
+  npx hardhat run scripts/transferPERC20.js --network swisstronik
+  ```
+
 guide and task not finished yet, wait for next update
