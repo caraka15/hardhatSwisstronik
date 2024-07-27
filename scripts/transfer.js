@@ -54,7 +54,7 @@ async function main() {
   const contractData = fs.readFileSync(filePath, "utf8");
   const contractAddress = contractData
     .split("\n")
-    .find((line) => line.startsWith("contractERC20="))
+    .find((line) => line.startsWith("contractPERC20="))
     .split("=")[1];
 
   if (!contractAddress) {
@@ -65,7 +65,7 @@ async function main() {
   const [signer] = await hre.ethers.getSigners();
 
   // Create a contract instance
-  const contractFactory = await hre.ethers.getContractFactory("tokenERC20");
+  const contractFactory = await hre.ethers.getContractFactory("PERC20Sample");
   const contract = contractFactory.attach(contractAddress);
 
   // Encode the function call data
