@@ -129,8 +129,27 @@
   ### 3. Transfer Tokens
 
 - Run the script to transfer tokens:
+
   ```sh
   npx hardhat run scripts/transferPERC20.js --network swisstronik
+  ```
+
+  ## Mint an Private NFT
+
+### 1. Deploy `privateNFT.sol`
+
+- before run you can edit your token name
+- Run the deployment script:
+  ```sh
+  npx hardhat run scripts/deployprivateNFT.js --network swisstronik
+  ```
+
+### 2. Mint private NFT Tokens
+
+- Run the script to mint an NFT:
+
+  ```sh
+  npx hardhat run scripts/mintprivateNFT.js --network swisstronik
   ```
 
 guide and task not finished yet, wait for next update
